@@ -1,5 +1,3 @@
-import SAMPLEDATA
-
 test_encoded_handle = "0x0009" #?
 
 digits = {
@@ -13,11 +11,10 @@ digits = {
 	"1010010":7,
 	"1111111":8,
 	"1111011":9,
-	
-	"0110010":"asdsadsad",
-	"0111111":"asdsadsad",
-	"1011000":"asdsadsad",
 
+	"0010101":"asdasd",
+	"0110010":"asdasd",
+	"1110010":"asdasd",
 	"0100101":"L",
 	"1010101":" ",
 	"1111110":"A",
@@ -25,6 +22,7 @@ digits = {
 	"0101101":"t",
 	"0001111":"o",
 	"0000000":" "
+
 }
 
 bits2 = [
@@ -97,6 +95,7 @@ def decode_all(hex_data):
 
 
 print(f"display: {decode_all(testvalue)}")
+
 
 #for x in SAMPLEDATA.data: print(f"display: {decode_all(x)}")#alredy xor decoded data
 
