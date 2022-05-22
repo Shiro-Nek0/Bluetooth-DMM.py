@@ -1,5 +1,4 @@
 import SAMPLEDATA
-import random
 
 test_encoded_handle = "0x0009" #?
 
