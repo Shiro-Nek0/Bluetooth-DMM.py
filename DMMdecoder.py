@@ -1,107 +1,123 @@
-test_encoded_handle = "0x0009" #?
+def str2hexarray(string):
+    array = string.split(" ")
+    for x in range(len(array)):
+        array[x] = int("0x"+ array[x],16) #convert hex to int
+    return array
 
-digits = {
-	"1110111":0,
-	"0010010":1,
-	"1011101":2,
-	"1011011":3,
-	"0111010":4,
-	"1101011":5,
-	"1101111":6,
-	"1010010":7,
-	"1111111":8,
-	"1111011":9,
-	
-	"0100101":"L",
-	"1010101":" ",
-	"1111110":"A",
-	"0000111":"u",
-	"0101101":"t",
-	"0001111":"o",
-	"0000000":" "
+def bytewise_XOR(array,xorkey):
+    decoded_array = []
+    for x in range(len(array)):
+        value = array[x] ^ xorkey[x] #Bytewyse XOR operation
+        formatted = '0x{0:0{1}X}'.format(value,2) #format to 2 digits hex
+        decoded_array.append(formatted)
+    return decoded_array
 
-}
+def hex2bin(array):
+    bits_from_hex = []
+    for x in range(len(array)):
+        bits_from_hex.append(bin(int(array[x], base=16)).lstrip('0b').zfill(8)) #convert to binary
+    return bits_from_hex
 
-bits2 = [
-    "HOLD","ºF","ºC","->","MAX","MIN","%","AC","F","u(F)",
-	"BT?","n(F)","Hz","ohm","K(ohm)","M(ohm)","V","m(V)",
-	"DC","A","auto","?7","u(A)","m(A)","?8","?9","?10","?11"
-]
+def flip_bits(array):
+    inverted_bits = []
+    for x in range(len(array)):
+        inverted_bits.append(array[x][::-1]) #reverse binary
+    return inverted_bits
 
-xorkey = [0x41,0x21,0x73,0x55,0xa2,0xc1,0x32,0x71,0x66,0xaa,0x3b,0xd0,0xe2,0xa8,0x33,0x14,0x20,0x21,0xaa,0xbb]
+def array2str(array):
+    string = ""
+    for x in range(len(array)):
+        string += str(array[x])
+    return string
 
-testvalue = [0x1b, 0x84, 0x70, 0xb1, 0x49, 0x6a, 0x9f, 0x3c, 0x66, 0xaa, 0x3b] #TEST
+def display_decoder(string):
+    digits = {
+        "1110111":0,
+        "0010010":1,
+        "1011101":2,
+        "1011011":3,
+        "0111010":4,
+        "1101011":5,
+        "1101111":6,
+        "1010010":7,
+        "1111111":8,
+        "1111011":9,
+        "0100101":"L",
+        "1111110":"A",
+        "0000111":"u",
+        "0101101":"t",
+        "0001111":"o",
+        "0000000":" "
+    }
 
-def xor(x,y):
-	return x ^ y
+    groups = [] #separate string in groups of 8
+    for x in range(0,len(string),8):
+        groups.append(string[x:x+8])
 
-def hex_to_binary(x):
-	return bin(int(x, base=16)).lstrip('0b').zfill(8)
+    reorder = [0,3,2,7,6,1,5,4] #reorder bits to sevseg order
+    for x in range(len(groups)):
+        temp = ""
+        for y in range(len(groups[x])):
+            temp += groups[x][reorder[y]]
+        groups[x] = temp
 
-def LSB_TO_MSB(x):
-	return x[::-1]
+    number = ""
+    for x in range(len(groups)):
+        if x == 0 and groups[0][0] == "1":
+            number += "-"
 
-# AAA
-# B C
-# DDD
-# E F
-# GGG
-# (Minus D1e D1b D1a D1g D1f D1d D1c)
-# ADCHGBFE = 03276154
+        if x > 0  and groups[x][0] == "1":
+            number += "."
 
-def rearange_bits(bits):#REORDER TO STANDARD SEVSEG PROTOCOL
-	reorder = [0,3,2,7,6,1,5,4] #7 segment display order SevSeg protocol
-	rearranged = []
-	digit = ""
-	for x in range(len(bits)):
-		for y in reorder:
-			digit += bits[x][y]
-			if len(digit) == 8:
-				rearranged.append(digit)
-				digit = ""
-	return rearranged
+        number += str(digits[groups[x][1:]])
 
-def str_to_array(string):
-	array = string.split(" ")
-	array = [int("0x"+x, base=16) for x in array]
-	return array
+    return number
 
-def decode(hex_data):
-	if type(hex_data) == str:
-		hex_data = str_to_array(hex_data)
-	
-	fullbinary = ""
-	binary_array = []
-	for x in range(len(hex_data)):
-		#tohex = hex(hex_data[x]) #in case data its already XOR decoded
-		tohex = hex(xor(hex_data[x],xorkey[x])) #Bytewyse XOR operation
-		tobinary = hex_to_binary(tohex) #convert to binary
-		flipped = LSB_TO_MSB(tobinary) #reverse binary
-		binary_array.append(flipped)
-		fullbinary += flipped
-	digit_segment = fullbinary[28:60] #7 segment display
-	symbols_section = fullbinary[60:88] #symbols
-	segment_array = []
-	for x in range(0,len(digit_segment),8): #split into 8 bit segments
-		segment_array.append(digit_segment[x:x+8])
-	#rearange bits
-	rearranged_segment_array = rearange_bits(segment_array) #rearrange bits
-	#print(rearranged_segment_array)
-	display = ""
-	if fullbinary[28] == "1":
-		display += "-"
-	for x in rearranged_segment_array:
-		if x[0] == "1":
-			display += "."
-		display += str(digits[x[1:8]])
-	for x in range(len(symbols_section)):
-		if symbols_section[x] == "1":
-			display += str(bits2[x])+" "
-	return display
+def binary2icons(string, typeID):
+
+    if (typeID == "11"):
+        icons = ["?1","Delta", "BT", "BUZ","HOLD","ºF","ºC","DIODE",
+                "MAX","MIN","%","AC","F","u(F)","m(F)","n(F)","Hz",
+                "ohm","K(ohm)","M(ohm)","V","m(V)","DC","A","AUTO",
+                "?7","u(A)","m(A)","?8","?9","?10","?11"]
+        
+    elif (typeID == "01"):
+        icons = ["?1","HOLD","FLASH","BUZ"," ", " ", " ", " ",
+                 "NANO", "V", "DC", "AC", "F", "DIODE", "A",
+                 "u(F)", "ohm", "K(ohm)","M(ohm)", " ", "Hz" ,"ºF"
+                 ,"ºC"]
+
+    icons_array = []
+    for x in range(len(string)):
+        if string[x] == "1":
+            icons_array.append(icons[x])
+
+    return icons_array
+
+def binary2info(string):
+    typeID = string[16:18]
+    display_number = display_decoder(string[28:60])
+    icons = binary2icons(string[24:28]+string[60:87], typeID)
+
+    obj = {
+        "typeID": typeID,
+        "display": display_number,
+        "icons": icons
+    }
+    return obj
 
 
-#print(f"display: {decode(testvalue)}")
+def decode(data):
+    xorkey = "41 21 73 55 a2 c1 32 71 66 aa 3b d0 e2 a8 33 14 20 21 aa bb"
 
-#for x in SAMPLEDATA.data: print(f"display: {decode(x)}")#alredy xor decoded data
-
-#print(digits[rearange_bits(["01111101"])[0][1:8]]) #from binary to sevgev to decimal
+    if type(data) == str:
+        encoded_array = str2hexarray(data)   
+    else:
+        encoded_array = data
+    xorkey = str2hexarray(xorkey)
+    xordecoded = bytewise_XOR(encoded_array,xorkey)
+    binary = hex2bin(xordecoded)
+    flipped = flip_bits(binary)
+    result = array2str(flipped)
+    obj = binary2info(result)
+    return obj
