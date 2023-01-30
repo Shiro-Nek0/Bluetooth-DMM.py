@@ -1,7 +1,6 @@
 # Bluetooth-DMM.py
-I (tried) to port @ludwich66 bluetooth protocol for Zotec(Aneng/BSIDE/OYI) multimeter family to python
+Port of @ludwich66 bluetooth protocol for Zotec(Aneng/BSIDE/OYI) multimeter family to python, now with 10 byte protocol support! *(i think)*.
 
-
-#only decoder no ble function yet and uses test value from https://github.com/ludwich66/Bluetooth-DMM/wiki/Bluetooth-DMM-11-Byte-Data-Protocol example
-
-#sample data from: https://github.com/ludwich66/Bluetooth-DMM/wiki/Bluetooth-DMM-11-Byte-Data-Protocol
+### Only decoder no ble function yet, uses test values from:
+- [11 Byte protocol](https://github.com/ludwich66/Bluetooth-DMM/wiki/Bluetooth-DMM-11-Byte-Data-Protocol)
+- [10 Byte protocol](https://github.com/ludwich66/Bluetooth-DMM/wiki/Bluetooth-DMM-10-Byte-Data-Protocol)
