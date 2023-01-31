@@ -112,8 +112,10 @@ def decode(data):
 
     if type(data) == str:
         encoded_array = str2hexarray(data)   
-    else:
+    elif type(data) == list:
         encoded_array = data
+    else:
+        return "Invalid input"
     xorkey = str2hexarray(xorkey)
     xordecoded = bytewise_XOR(encoded_array,xorkey)
     binary = hex2bin(xordecoded)
