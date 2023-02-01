@@ -31,7 +31,30 @@ def array2str(array):
     return string
 
 def display_decoder(string):
-    digits = {
+    digits_orig = {
+        "1111101":0,
+        "0000101":1,
+        "1011011":2,
+        "0011111":3,
+        "0100111":4,
+        "0111110":5,
+        "1111110":6,
+        "0010101":7,
+        "1111111":8,
+        "0111111":9,
+        "1110111":"A",
+        "1001100":"u",
+        "1101010":"t",
+        "1001110":"o",
+        "1101000":"L",
+        "1111010":"E",
+        "1110010":"F",
+        "0000000":" ",
+        "0000010":"-",
+    }
+
+    '''
+    digits_sevgev = { #sevseg order
         "1110111":0,
         "0010010":1,
         "1011101":2,
@@ -49,18 +72,19 @@ def display_decoder(string):
         "0001111":"o",
         "0000000":" "
     }
-
+    '''
     groups = [] #separate string in groups of 8
     for x in range(0,len(string),8):
         groups.append(string[x:x+8])
-
-    reorder = [0,3,2,7,6,1,5,4] #reorder bits to sevseg order
+        
+    '''
+    reorder = [0,3,2,7,6,1,5,4] #reorder bits to sevseg order (optional)
     for x in range(len(groups)):
         temp = ""
         for y in range(len(groups[x])):
             temp += groups[x][reorder[y]]
         groups[x] = temp
-
+    '''
     number = ""
     for x in range(len(groups)):
         if x == 0 and groups[0][0] == "1":
@@ -69,7 +93,7 @@ def display_decoder(string):
         if x > 0  and groups[x][0] == "1":
             number += "."
 
-        number += str(digits[groups[x][1:]])
+        number += str(digits_orig[groups[x][1:]])
 
     return number
 
