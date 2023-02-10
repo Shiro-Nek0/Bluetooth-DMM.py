@@ -1,7 +1,7 @@
 # Bluetooth-DMM.py
 Port of @ludwich66 bluetooth protocol for Zotec(Aneng/BSIDE/OYI) multimeter family to python.
 
-BLE connection via bleak:
+BLE connection via [bleak](https://github.com/hbldh/bleak):
 - Autodiscover
 - By Address
 
