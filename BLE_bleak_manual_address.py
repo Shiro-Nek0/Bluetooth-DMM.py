@@ -23,6 +23,7 @@ def notification_handler(sender, data):
     #do something with the data
     print("DMM ID: ", DMM_data["typeID"])
     print("Display: ", DMM_data["display"])
+    print("Value type: ", DMM_data["value_type"])
     print("Icons: ",DMM_data["icons"])
 
 if __name__ == "__main__":
