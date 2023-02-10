@@ -13,7 +13,7 @@ def on_disconnect(client, *args, **kwargs):
 
 async def run():
     print("Scanning for devices...")
-    address = await BleakScanner.find_device_by_filter(filterfunc =(lambda d, ad: d.name == device_name), timeout=10.0)
+    address = await BleakScanner.find_device_by_filter(filterfunc =(lambda d, ad: d.name == device_name), timeout=20.0)
     if not address:
         print("Device with name " + device_name + " not found!")
         exit()
@@ -29,8 +29,10 @@ async def run():
 def notification_handler(sender, data):
     DMM_data = DMMdecoder.decode(data.hex(" "))
     #do something with the data
+
     print("DMM ID: ", DMM_data["typeID"])
     print("Display: ", DMM_data["display"])
+    print("Value type: ", DMM_data["value_type"])
     print("Icons: ",DMM_data["icons"])
 
 if __name__ == "__main__":

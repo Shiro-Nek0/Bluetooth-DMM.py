@@ -53,38 +53,10 @@ def display_decoder(string):
         "0000010":"-",
     }
 
-    '''
-    digits_sevgev = { #sevseg order
-        "1110111":0,
-        "0010010":1,
-        "1011101":2,
-        "1011011":3,
-        "0111010":4,
-        "1101011":5,
-        "1101111":6,
-        "1010010":7,
-        "1111111":8,
-        "1111011":9,
-        "0100101":"L",
-        "1111110":"A",
-        "0000111":"u",
-        "0101101":"t",
-        "0001111":"o",
-        "0000000":" "
-    }
-    '''
     groups = [] #separate string in groups of 8
     for x in range(0,len(string),8):
         groups.append(string[x:x+8])
         
-    '''
-    reorder = [0,3,2,7,6,1,5,4] #reorder bits to sevseg order (optional)
-    for x in range(len(groups)):
-        temp = ""
-        for y in range(len(groups[x])):
-            temp += groups[x][reorder[y]]
-        groups[x] = temp
-    '''
     number = ""
     for x in range(len(groups)):
         if x == 0 and groups[0][0] == "1":
@@ -94,8 +66,10 @@ def display_decoder(string):
             number += "."
 
         number += str(digits_orig[groups[x][1:]])
-
-    return number
+    try:
+        return float(number)
+    except:
+        return number
 
 def binary2icons(string, typeID):
 
@@ -126,6 +100,7 @@ def binary2info(string):
     obj = {
         "typeID": typeID,
         "display": display_number,
+        "value_type": type(display_number).__name__,
         "icons": icons
     }
     return obj
