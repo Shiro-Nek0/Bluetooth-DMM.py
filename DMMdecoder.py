@@ -74,7 +74,7 @@ def display_decoder(string):
 def binary2icons(string, typeID):
 
     if (typeID == "11"):
-        icons = ["?1","Delta", "BT", "BUZ","HOLD","ºF","ºC","DIODE",
+        icons = ["LowBattery","Delta", "BT", "BUZ","HOLD","ºF","ºC","DIODE",
                 "MAX","MIN","%","AC","F","u(F)","m(F)","n(F)","Hz",
                 "ohm","K(ohm)","M(ohm)","V","m(V)","DC","A","AUTO",
                 "?7","u(A)","m(A)","?8","?9","?10","?11"]
